@@ -1,0 +1,115 @@
+---
+---
+
+<header>
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo-link">
+          <img src="/logo.png" alt="Gbengbar Town FC Logo" class="logo" />
+          <span class="club-name">Gbengbar Town FC</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/team">Team</a></li>
+          <li><a href="/fixtures">Fixtures</a></li>
+          <li><a href="/news">News</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  header {
+    background: linear-gradient(135deg, var(--club-dark) 0%, var(--club-green) 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .navbar {
+    padding: 1rem 0;
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--club-gold);
+  }
+
+  .logo {
+    height: 60px;
+    width: auto;
+  }
+
+  .club-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--club-gold);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--club-gold);
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .nav-content {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .club-name {
+      font-size: 1.2rem;
+    }
+
+    .logo {
+      height: 50px;
+    }
+  }
+</style>

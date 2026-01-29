@@ -1,0 +1,419 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Gbengbar Town FC - Home">
+  <Header />
+  
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Welcome to Gbengbar Town FC</h1>
+          <p class="hero-subtitle">Building Champions Since August 2023</p>
+          <div class="hero-cta">
+            <a href="/team" class="btn btn-primary">Meet the Team</a>
+            <a href="/fixtures" class="btn btn-secondary">View Fixtures</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-overlay"></div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-content">
+            <h2>About Our Club</h2>
+            <p>
+              Gbengbar Town FC was founded in August 2023 with a vision to bring world-class football 
+              training to our community. We represent the pride, passion, and determination of Gbengbar Town 
+              and surrounding areas.
+            </p>
+            <p>
+              Our club is built on strong foundations of teamwork, discipline, and excellence. 
+              We are committed to developing local talent and creating opportunities for young 
+              players to showcase their skills at the highest level.
+            </p>
+          </div>
+          <div class="about-image">
+            <img src="/logo.png" alt="Gbengbar Town FC Shield" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">2023</div>
+            <div class="stat-label">Founded</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">Players</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Commitment</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">1st</div>
+            <div class="stat-label">In Hearts</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest News Section -->
+    <section class="news">
+      <div class="container">
+        <h2>Latest News</h2>
+        <div class="news-grid">
+          <article class="news-card">
+            <div class="news-image">
+              <img src="/logo.png" alt="News" />
+            </div>
+            <div class="news-content">
+              <h3>New Season Preparations Underway</h3>
+              <p class="news-date">January 25, 2026</p>
+              <p>The team is in full training mode as we prepare for the upcoming season...</p>
+              <a href="/news" class="read-more">Read More →</a>
+            </div>
+          </article>
+          
+          <article class="news-card">
+            <div class="news-image">
+              <img src="/logo.png" alt="News" />
+            </div>
+            <div class="news-content">
+              <h3>Youth Academy Launch</h3>
+              <p class="news-date">January 20, 2026</p>
+              <p>We are excited to announce the launch of our youth development program...</p>
+              <a href="/news" class="read-more">Read More →</a>
+            </div>
+          </article>
+          
+          <article class="news-card">
+            <div class="news-image">
+              <img src="/logo.png" alt="News" />
+            </div>
+            <div class="news-content">
+              <h3>Community Outreach Success</h3>
+              <p class="news-date">January 15, 2026</p>
+              <p>Our recent community football clinic was a huge success with over 100 participants...</p>
+              <a href="/news" class="read-more">Read More →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--club-dark) 0%, var(--club-green) 50%, var(--club-gold) 100%);
+    color: white;
+    padding: 8rem 0;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 50px,
+        rgba(255, 255, 255, 0.03) 50px,
+        rgba(255, 255, 255, 0.03) 51px
+      );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease;
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--club-gold);
+    animation: fadeInUp 0.8s ease 0.2s backwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    animation: fadeInUp 0.8s ease 0.4s backwards;
+  }
+
+  .btn {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background-color: var(--club-gold);
+    color: var(--club-dark);
+  }
+
+  .btn-primary:hover {
+    background-color: #ffcc5c;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(244, 181, 63, 0.4);
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .btn-secondary:hover {
+    background-color: white;
+    color: var(--club-green);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* About Section */
+  .about {
+    padding: 4rem 0;
+    background-color: white;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .about h2 {
+    color: var(--club-green);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-content p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .about-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .about-image img {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Stats Section */
+  .stats {
+    background: linear-gradient(135deg, var(--club-green) 0%, var(--club-dark) 100%);
+    padding: 4rem 0;
+    color: white;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .stat-card {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--club-gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* News Section */
+  .news {
+    padding: 4rem 0;
+    background-color: var(--club-light);
+  }
+
+  .news h2 {
+    color: var(--club-green);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .news-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .news-image {
+    height: 200px;
+    background: linear-gradient(135deg, var(--club-green) 0%, var(--club-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .news-image img {
+    max-width: 150px;
+    height: auto;
+  }
+
+  .news-content {
+    padding: 1.5rem;
+  }
+
+  .news-content h3 {
+    color: var(--club-green);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+  }
+
+  .news-date {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: var(--club-gold);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .read-more:hover {
+    color: var(--club-green);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-image {
+      order: -1;
+    }
+
+    .about-image img {
+      max-width: 250px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .news-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
