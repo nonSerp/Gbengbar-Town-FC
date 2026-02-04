@@ -1,0 +1,1133 @@
+---
+// fixtures.astro - Team Fixtures and Match Schedule
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixtures & Results</title>
+    <style>
+        :root {
+            --club-green: #1a4d2e;
+            --club-gold: #f4b53f;
+            --club-dark: #0a1f14;
+            --club-light: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--club-light);
+            color: var(--club-dark);
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--club-green) 0%, var(--club-dark) 100%);
+            color: white;
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(244,181,63,0.1)" stroke-width="0.5"/></svg>');
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .season-badge {
+            display: inline-block;
+            background: var(--club-gold);
+            color: var(--club-dark);
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Container */
+        .fixtures-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Filter Tabs */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid var(--club-green);
+            color: var(--club-green);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: var(--club-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(26, 77, 46, 0.3);
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 30px rgba(26, 77, 46, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--club-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .stat-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--club-gold);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--club-green);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Month Headers */
+        .month-section {
+            margin-bottom: 50px;
+        }
+
+        .month-header {
+            background: var(--club-green);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .month-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .month-count {
+            background: var(--club-gold);
+            color: var(--club-dark);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Fixture Cards */
+        .fixtures-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .fixture-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .fixture-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 30px rgba(26, 77, 46, 0.2);
+        }
+
+        .fixture-card.completed {
+            border-left: 5px solid var(--club-gold);
+        }
+
+        .fixture-card.upcoming {
+            border-left: 5px solid var(--club-green);
+        }
+
+        .fixture-header {
+            background: var(--club-light);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .fixture-date {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--club-dark);
+            font-weight: 600;
+        }
+
+        .fixture-date svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--club-green);
+        }
+
+        .fixture-status {
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-completed {
+            background: var(--club-gold);
+            color: var(--club-dark);
+        }
+
+        .status-upcoming {
+            background: var(--club-green);
+            color: white;
+        }
+
+        .status-live {
+            background: #e74c3c;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .fixture-body {
+            padding: 30px 25px;
+        }
+
+        .match-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team.home {
+            justify-content: flex-end;
+        }
+
+        .team.away {
+            justify-content: flex-start;
+        }
+
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            background: var(--club-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            border: 3px solid var(--club-light);
+            box-shadow: 0 3px 10px rgba(26, 77, 46, 0.2);
+        }
+
+        .team-info {
+            text-align: center;
+        }
+
+        .team.home .team-info {
+            text-align: right;
+        }
+
+        .team.away .team-info {
+            text-align: left;
+        }
+
+        .team-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--club-dark);
+            margin-bottom: 5px;
+        }
+
+        .team-record {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .score-section {
+            text-align: center;
+        }
+
+        .score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--club-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .score-divider {
+            color: #ccc;
+        }
+
+        .match-time {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .vs-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--club-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .fixture-footer {
+            padding: 15px 25px;
+            background: var(--club-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .venue {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .venue svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--club-green);
+        }
+
+        .match-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 20px;
+            background: var(--club-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--club-dark);
+            transform: scale(1.05);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--club-green);
+            border: 2px solid var(--club-green);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--club-green);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.1);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            fill: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: var(--club-dark);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .match-details {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .team {
+                justify-content: center !important;
+            }
+
+            .team-info {
+                text-align: center !important;
+            }
+
+            .score {
+                order: -1;
+            }
+
+            .fixture-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .match-actions {
+                width: 100%;
+            }
+
+            .action-btn {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 50px 20px 40px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .fixtures-container {
+                padding: 40px 15px;
+            }
+
+            .filter-section {
+                gap: 10px;
+            }
+
+            .filter-tab {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .team-logo {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .team-name {
+                font-size: 1.1rem;
+            }
+
+            .score {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Fixtures & Results</h1>
+            <p>Complete schedule of matches and tournament results</p>
+            <div class="season-badge">2025/2026 Season</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="fixtures-container">
+        <!-- Filter Tabs -->
+        <div class="filter-section">
+            <button class="filter-tab active" data-filter="all">All Matches</button>
+            <button class="filter-tab" data-filter="upcoming">Upcoming</button>
+            <button class="filter-tab" data-filter="completed">Results</button>
+            <button class="filter-tab" data-filter="live">Live</button>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Matches Played</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">16</div>
+                <div class="stat-label">Wins</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">72</div>
+                <div class="stat-label">Goals Scored</div>
+            </div>
+        </div>
+
+        <!-- February Fixtures -->
+        <div class="month-section" data-month="february">
+            <div class="month-header">
+                <h2>February 2026</h2>
+                <span class="month-count">4 Matches</span>
+            </div>
+
+            <div class="fixtures-list">
+                <!-- Upcoming Match 1 -->
+                <div class="fixture-card upcoming" data-status="upcoming">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, February 8, 2026
+                        </div>
+                        <span class="fixture-status status-upcoming">Upcoming</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Regent Club Boys</div>
+                                    <div class="team-record">W-D-L: 12-3-2</div>
+                                </div>
+                                <div class="team-logo">RCB</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="vs-text">VS</div>
+                                <div class="match-time">15:00</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">RF</div>
+                                <div class="team-info">
+                                    <div class="team-name">Rennie's FC</div>
+                                    <div class="team-record">W-D-L: 10-5-2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            National Stadium, Monrovia
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Preview</button>
+                            <button class="action-btn secondary">Set Reminder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Match 2 -->
+                <div class="fixture-card upcoming" data-status="upcoming">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Sunday, February 9, 2026
+                        </div>
+                        <span class="fixture-status status-upcoming">Upcoming</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Cotton Tree Defender</div>
+                                    <div class="team-record">W-D-L: 8-6-3</div>
+                                </div>
+                                <div class="team-logo">CTD</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="vs-text">VS</div>
+                                <div class="match-time">14:00</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">JFC</div>
+                                <div class="team-info">
+                                    <div class="team-name">Jakpah FC</div>
+                                    <div class="team-record">W-D-L: 9-4-4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Practice Pitch
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Preview</button>
+                            <button class="action-btn secondary">Set Reminder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Match 3 -->
+                <div class="fixture-card upcoming" data-status="upcoming">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, February 15, 2026
+                        </div>
+                        <span class="fixture-status status-upcoming">Upcoming</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Gbengbar Town FC</div>
+                                    <div class="team-record">W-D-L: 11-2-4</div>
+                                </div>
+                                <div class="team-logo">GTF</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="vs-text">VS</div>
+                                <div class="match-time">16:30</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">REF</div>
+                                <div class="team-info">
+                                    <div class="team-name">Redeem Foundation</div>
+                                    <div class="team-record">W-D-L: 7-7-3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Practice Pitch, Payneville
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Preview</button>
+                            <button class="action-btn secondary">Set Reminder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Match 4 -->
+                <div class="fixture-card upcoming" data-status="upcoming">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Sunday, February 16, 2026
+                        </div>
+                        <span class="fixture-status status-upcoming">Upcoming</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Kingdom Athletic</div>
+                                    <div class="team-record">W-D-L: 10-6-1</div>
+                                </div>
+                                <div class="team-logo">KA</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="vs-text">VS</div>
+                                <div class="match-time">15:00</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">FCC</div>
+                                <div class="team-info">
+                                    <div class="team-name">FC Conqueror</div>
+                                    <div class="team-record">W-D-L: 9-5-3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Practice Pitch
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Preview</button>
+                            <button class="action-btn secondary">Set Reminder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- January Results -->
+        <div class="month-section" data-month="january">
+            <div class="month-header">
+                <h2>January 2026</h2>
+                <span class="month-count">6 Matches</span>
+            </div>
+
+            <div class="fixtures-list">
+                <!-- Completed Match 1 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, February 1, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Sinoe FC</div>
+                                    <div class="team-record">W-D-L: 6-8-3</div>
+                                </div>
+                                <div class="team-logo">SFC</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>2</span>
+                                    <span class="score-divider">-</span>
+                                    <span>3</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">WS</div>
+                                <div class="team-info">
+                                    <div class="team-name">Wuteve Sparkling</div>
+                                    <div class="team-record">W-D-L: 8-5-4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            National Stadium, Monrovia
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Match 2 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, January 25, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Regent Club Boys</div>
+                                    <div class="team-record">W-D-L: 12-3-2</div>
+                                </div>
+                                <div class="team-logo">RCB</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>4</span>
+                                    <span class="score-divider">-</span>
+                                    <span>1</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">CTD</div>
+                                <div class="team-info">
+                                    <div class="team-name">Cotton Tree Defender</div>
+                                    <div class="team-record">W-D-L: 8-6-3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Sports Complex
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Match 3 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Sunday, January 26, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Rennie's FC</div>
+                                    <div class="team-record">W-D-L: 10-5-2</div>
+                                </div>
+                                <div class="team-logo">RF</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>2</span>
+                                    <span class="score-divider">-</span>
+                                    <span>2</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">JFC</div>
+                                <div class="team-info">
+                                    <div class="team-name">Jakpah FC</div>
+                                    <div class="team-record">W-D-L: 9-4-4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            National Stadium, Monrovia
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Match 4 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, January 18, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Gbengbar Town FC</div>
+                                    <div class="team-record">W-D-L: 11-2-4</div>
+                                </div>
+                                <div class="team-logo">GTF</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>3</span>
+                                    <span class="score-divider">-</span>
+                                    <span>0</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">KA</div>
+                                <div class="team-info">
+                                    <div class="team-name">Kingdom Athletic</div>
+                                    <div class="team-record">W-D-L: 10-6-1</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Practice Pitch
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Match 5 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Sunday, January 19, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Redeem Foundation</div>
+                                    <div class="team-record">W-D-L: 7-7-3</div>
+                                </div>
+                                <div class="team-logo">REF</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>1</span>
+                                    <span class="score-divider">-</span>
+                                    <span>1</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">FCC</div>
+                                <div class="team-info">
+                                    <div class="team-name">FC Conqueror</div>
+                                    <div class="team-record">W-D-L: 9-5-3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Practice Pitch, Paynesville
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Match 6 -->
+                <div class="fixture-card completed" data-status="completed">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            Saturday, January 11, 2026
+                        </div>
+                        <span class="fixture-status status-completed">Full Time</span>
+                    </div>
+                    <div class="fixture-body">
+                        <div class="match-details">
+                            <div class="team home">
+                                <div class="team-info">
+                                    <div class="team-name">Sinoe FC</div>
+                                    <div class="team-record">W-D-L: 6-8-3</div>
+                                </div>
+                                <div class="team-logo">SFC</div>
+                            </div>
+                            <div class="score-section">
+                                <div class="score">
+                                    <span>0</span>
+                                    <span class="score-divider">-</span>
+                                    <span>2</span>
+                                </div>
+                                <div class="match-time">FT</div>
+                            </div>
+                            <div class="team away">
+                                <div class="team-logo">RCB</div>
+                                <div class="team-info">
+                                    <div class="team-name">Regent Club Boys</div>
+                                    <div class="team-record">W-D-L: 12-3-2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="venue">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            SKD Sports Complex
+                        </div>
+                        <div class="match-actions">
+                            <button class="action-btn">Match Report</button>
+                            <button class="action-btn secondary">Highlights</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+         // Action button handlers
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const action = btn.textContent.trim();
+                alert(`${action} - Feature coming soon!`);
+            });
+        });
+    </script>
+</body>
+</html>
