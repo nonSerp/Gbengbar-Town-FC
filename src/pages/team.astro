@@ -890,46 +890,6 @@
         </div>
     </div>
 
-    <script>
-        // Filter functionality
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const playerCards = document.querySelectorAll('.player-card');
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Update active state
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const position = btn.dataset.position;
-
-                // Filter players
-                playerCards.forEach(card => {
-                    if (position === 'all') {
-                        card.style.display = 'block';
-                    } else {
-                        const cardPosition = card.dataset.position;
-                        card.style.display = cardPosition === position ? 'block' : 'none';
-                    }
-                });
-            });
-        });
-
-        // Add smooth scroll animation on load
-        window.addEventListener('load', () => {
-            const cards = document.querySelectorAll('.player-card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        card.style.transition = 'all 0.5s ease';
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                }, index * 50);
-            });
-        });
-    </script>
+       
 </body>
 </html>
