@@ -1,0 +1,935 @@
+---
+// team.astro - Team Players Page
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team</title>
+    <style>
+        :root {
+            --club-green: #1a4d2e;
+            --club-gold: #f4b53f;
+            --club-dark: #0a1f14;
+            --club-light: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--club-light);
+            color: var(--club-dark);
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--club-green) 0%, var(--club-dark) 100%);
+            color: white;
+            padding: 100px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(244,181,63,0.1)" stroke-width="0.5"/></svg>');
+            background-size: 80px 80px;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            margin-bottom: 15px;
+        }
+
+        .team-badge {
+            display: inline-block;
+            background: var(--club-gold);
+            color: var(--club-dark);
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 20px;
+        }
+
+        /* Main Container */
+        .team-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            color: var(--club-green);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Filter Tabs */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid var(--club-green);
+            color: var(--club-green);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--club-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(26, 77, 46, 0.3);
+        }
+
+        /* Team Stats */
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 70px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 30px rgba(26, 77, 46, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--club-green);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Players Grid */
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 35px;
+            margin-bottom: 60px;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 25px rgba(26, 77, 46, 0.12);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .player-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(26, 77, 46, 0.25);
+        }
+
+        .player-image {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, var(--club-green) 0%, var(--club-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .player-card:hover .player-image img {
+            transform: scale(1.08);
+        }
+
+        .player-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--club-gold);
+            color: var(--club-dark);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-position {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(26, 77, 46, 0.95);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .player-info {
+            padding: 25px;
+        }
+
+        .player-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--club-dark);
+            margin-bottom: 8px;
+        }
+
+        .player-role {
+            color: var(--club-green);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding-top: 15px;
+            border-top: 2px solid var(--club-light);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--club-green);
+        }
+
+        .stat-name {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .player-social {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 35px;
+            height: 35px;
+            background: var(--club-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--club-green);
+            transform: translateY(-3px);
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--club-dark);
+        }
+
+        .social-link:hover svg {
+            fill: white;
+        }
+
+        /* Coaching Staff Section */
+        .coaching-section {
+            margin-top: 80px;
+        }
+
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .staff-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .staff-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(26, 77, 46, 0.2);
+        }
+
+        .staff-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--club-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--club-gold);
+            font-weight: 700;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .staff-details h3 {
+            color: var(--club-dark);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .staff-details p {
+            color: var(--club-green);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .staff-details span {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .players-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 70px 20px 50px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .team-container {
+                padding: 50px 15px;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                gap: 10px;
+            }
+
+            .filter-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .player-image {
+                height: 300px;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Meet Our Team</h1>
+            <p>Dedicated Athletes, United by Passion</p>
+            <div class="team-badge">Gbengbar Town FC Squad</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="team-container">
+        <!-- Team Stats -->
+        <div class="team-stats">
+            <div class="stat-box">
+                <div class="stat-number">25</div>
+                <div class="stat-label">Squad Players</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Coaching Staff</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">142</div>
+                <div class="stat-label">Goals Scored</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Clean Sheets</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <button class="filter-btn active" data-position="all">All Players</button>
+            <button class="filter-btn" data-position="goalkeeper">Goalkeepers</button>
+            <button class="filter-btn" data-position="defender">Defenders</button>
+            <button class="filter-btn" data-position="midfielder">Midfielders</button>
+            <button class="filter-btn" data-position="forward">Forwards</button>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2>First Team Squad</h2>
+            <p>Our talented roster ready to compete at the highest level</p>
+        </div>
+
+        <!-- Players Grid -->
+        <div class="players-grid">
+            <!-- Player 1 -->
+            <div class="player-card" data-position="forward">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-15%20at%2010.59.27%20AM.jpeg" alt="Player 1">
+                    <div class="player-number">7</div>
+                    <div class="player-position">Forward</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Ephraim Kopeh</h3>
+                    <p class="player-role">Striker</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">38</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 2 -->
+            <div class="player-card" data-position="midfielder">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-09%20at%209.19.00%20AM.jpeg" alt="Player 2">
+                    <div class="player-number">10</div>
+                    <div class="player-position">Midfielder</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Lawrence R Williams</h3>
+                    <p class="player-role">Attacking Midfielder</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">22</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 3 -->
+            <div class="player-card" data-position="midfielder">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-09%20at%209.09.55%20AM.jpeg" alt="Player 3">
+                    <div class="player-number">8</div>
+                    <div class="player-position">Midfielder</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Cyrus Roberts</h3>
+                    <p class="player-role">Central Midfielder</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">9</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">40</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 4 -->
+            <div class="player-card" data-position="defender">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-09%20at%209.15.48%20AM.jpeg" alt="Player 4">
+                    <div class="player-number">5</div>
+                    <div class="player-position">Defender</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Alfred B. Nardeh</h3>
+                    <p class="player-role">Center Back</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">41</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 5 -->
+            <div class="player-card" data-position="forward">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-15%20at%2011.32.07%20AM.jpeg" alt="Player 5">
+                    <div class="player-number">11</div>
+                    <div class="player-position">Forward</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Isaiah Flo</h3>
+                    <p class="player-role">Winger</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">16</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">19</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">39</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 6 -->
+            <div class="player-card" data-position="goalkeeper">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-15%20at%2011.09.20%20AM.jpeg" alt="Player 6">
+                    <div class="player-number">1</div>
+                    <div class="player-position">Goalkeeper</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">John Maxwell</h3>
+                    <p class="player-role">First Team Goalkeeper</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-name">Clean</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">128</div>
+                            <div class="stat-name">Saves</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 7 -->
+            <div class="player-card" data-position="midfielder">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-15%20at%208.20.26%20PM.jpeg" alt="Player 7">
+                    <div class="player-number">6</div>
+                    <div class="player-position">Midfielder</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Abraham Seth</h3>
+                    <p class="player-role">Defensive Midfielder</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">40</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 8 -->
+            <div class="player-card" data-position="defender">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-09%20at%209.12.42%20AM.jpeg" alt="Player 8">
+                    <div class="player-number">3</div>
+                    <div class="player-position">Defender</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">King S Kapeh</h3>
+                    <p class="player-role">Left Back</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">2</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">9</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">38</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 9 -->
+            <div class="player-card" data-position="midfielder">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-09%20at%209.18.03%20AM.jpeg" alt="Player 9">
+                    <div class="player-number">14</div>
+                    <div class="player-position">Midfielder</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Blessing Kuyateh</h3>
+                    <p class="player-role">Box-to-Box Midfielder</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">11</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">13</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">37</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 10 -->
+            <div class="player-card" data-position="defender">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-15%20at%2011.30.09%20AM.jpeg" alt="Player 10">
+                    <div class="player-number">4</div>
+                    <div class="player-position">Defender</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Diamond B Sonyah</h3>
+                    <p class="player-role">Center Back</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">40</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 11 -->
+            <div class="player-card" data-position="forward">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-16%20at%207.02.18%20PM.jpeg" alt="Player 11">
+                    <div class="player-number">9</div>
+                    <div class="player-position">Forward</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Carshor Mowon</h3>
+                    <p class="player-role">Striker</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">21</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">7</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">36</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 12 -->
+            <div class="player-card" data-position="midfielder">
+                <div class="player-image">
+                    <img src="https://rgdqb7ncymh6jztn.public.blob.vercel-storage.com/WhatsApp%20Image%202026-01-16%20at%207.03.21%20PM.jpeg" alt="Player 12">
+                    <div class="player-number">17</div>
+                    <div class="player-position">Midfielder</div>
+                </div>
+                <div class="player-info">
+                    <h3 class="player-name">Francis Geesay</h3>
+                    <p class="player-role">Right Midfielder</p>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">14</div>
+                            <div class="stat-name">Goals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">16</div>
+                            <div class="stat-name">Assists</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">39</div>
+                            <div class="stat-name">Apps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coaching Staff Section -->
+        <div class="coaching-section">
+            <div class="section-header">
+                <h2>Coaching Staff</h2>
+                <p>Experienced professionals guiding our team to excellence</p>
+            </div>
+
+            <div class="staff-grid">
+                <div class="staff-card">
+                    <div class="staff-avatar">SF</div>
+                    <div class="staff-details">
+                        <h3>Siafa Fahnbulleh</h3>
+                        <p>Head Coach</p>
+                        <span>5 years experience</span>
+                    </div>
+                </div>
+
+                <div class="staff-card">
+                    <div class="staff-avatar">GC</div>
+                    <div class="staff-details">
+                        <h3>Garnayee Clinton</h3>
+                        <p>Assistant Coach</p>
+                        <span>6 years experience</span>
+                    </div>
+                </div>
+
+                <div class="staff-card">
+                    <div class="staff-avatar">RS</div>
+                    <div class="staff-details">
+                        <h3>Richard Smith</h3>
+                        <p>Goalkeeper Coach</p>
+                        <span>8 years experience</span>
+                    </div>
+                </div>
+
+                <div class="staff-card">
+                    <div class="staff-avatar">OJ</div>
+                    <div class="staff-details">
+                        <h3>Officer Johnson</h3>
+                    <p>Fitness Coach</p>
+                        <span>12 years experience</span>
+                    </div>
+                </div>
+
+                <div class="staff-card">
+                    <div class="staff-avatar">YH</div>
+                    <div class="staff-details">
+                        <h3>Dr. Yensowah Hinneh II</h3>
+                        <p>Sports Physiotherapist</p>
+                        <span>15 years experience</span>
+                    </div>
+                </div>
+
+                <div class="staff-card">
+                    <div class="staff-avatar">DAF</div>
+                    <div class="staff-details">
+                        <h3>Arab Fofana</h3>
+                        <p>Technical Director</p>
+                        <span>20 years experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const playerCards = document.querySelectorAll('.player-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const position = btn.dataset.position;
+
+                // Filter players
+                playerCards.forEach(card => {
+                    if (position === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const cardPosition = card.dataset.position;
+                        card.style.display = cardPosition === position ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Add smooth scroll animation on load
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.5s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 50);
+            });
+        });
+    </script>
+</body>
+</html>
