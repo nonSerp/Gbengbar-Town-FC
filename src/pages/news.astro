@@ -802,54 +802,54 @@ Liberian youth talent, the world is watching. 🚀🇱🇷
         </section>
     </div>
 
-    <script>
+    //<script>
         // Filter functionality
-        const filterTabs = document.querySelectorAll('.filter-tab');
-        const articles = document.querySelectorAll('.article-card');
+     //   const filterTabs = document.querySelectorAll('.filter-tab');
+      //  const articles = document.querySelectorAll('.article-card');
 
-        filterTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Update active state
-                filterTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+      //  filterTabs.forEach(tab => {
+      //      tab.addEventListener('click', () => {
+       //         // Update active state
+      //          filterTabs.forEach(t => t.classList.remove('active'));
+      //          tab.classList.add('active');
 
-                const category = tab.dataset.category;
+                //const category = tab.dataset.category;
 
                 // Filter articles
-                articles.forEach(article => {
-                    if (category === 'all' || article.dataset.category === category) {
-                        article.style.display = 'block';
-                    } else {
-                        article.style.display = 'none';
-                    }
-                });
-            });
-        });
+               // articles.forEach(article => {
+               //     if (category === 'all' || article.dataset.category === category) {
+               //         article.style.display = 'block';
+               //     } else {
+               //         article.style.display = 'none';
+             //       }
+            //    });
+         //   });
+       // });
 
         // Search functionality
-        const searchInput = document.querySelector('.search-box input');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
+        //const searchInput = document.querySelector('.search-box input');
+        //searchInput.addEventListener('input', (e) => {
+         //   const searchTerm = e.target.value.toLowerCase();
 
-            articles.forEach(article => {
-                const title = article.querySelector('h3').textContent.toLowerCase();
-                const excerpt = article.querySelector('.article-excerpt').textContent.toLowerCase();
+          //  articles.forEach(article => {
+          //      const title = article.querySelector('h3').textContent.toLowerCase();
+           //     const excerpt = article.querySelector('.article-excerpt').textContent.toLowerCase();
 
-                if (title.includes(searchTerm) || excerpt.includes(searchTerm)) {
-                    article.style.display = 'block';
-                } else {
-                    article.style.display = 'none';
-                }
-            });
-        });
+          //      if (title.includes(searchTerm) || excerpt.includes(searchTerm)) {
+          //          article.style.display = 'block';
+         //       } else {
+         //           article.style.display = 'none';
+        //        }
+        //    });
+      //  });
 
         // Newsletter form
-        document.querySelector('.newsletter-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('input').value;
-            alert(`Thank you for subscribing with ${email}!`);
-            e.target.reset();
-        });
+        //document.querySelector('.newsletter-form').addEventListener('submit', (e) => {
+       //     e.preventDefault();
+       //     const email = e.target.querySelector('input').value;
+       //     alert(`Thank you for subscribing with ${email}!`);
+       //     e.target.reset();
+       // });
 
         // Pagination
         const pageButtons = document.querySelectorAll('.page-btn:not(:first-child):not(:last-child)');
