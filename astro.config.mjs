@@ -4,7 +4,6 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  prerender:   'False',
   site: 'https://gbengbartown.com',
   integrations: [
     sitemap()
