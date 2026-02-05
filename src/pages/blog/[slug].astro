@@ -14,14 +14,14 @@ const relatedPosts = posts.filter(p => p.slug !== slug);
 
 <html lang="en">
   <SEO 
-    title={currentPost.title}
+    title = {currentPost?.title}
     description="Blog post description"
     canonical={`gbengbartown.com/blog/${slug}`}
   />
   <body>
     <article>
-      <h1>{currentPost.title}</h1>
-      <div set:html={currentPost.content} />
+      <h1>{currentPost?.title}</h1>
+      <div set:html={currentPost?.content} />
       
       <!-- Internal backlinks to related content -->
       <section class="related-posts">
