@@ -2,34 +2,44 @@
 // src/pages/blog/[slug].astro
 import SEO from '../../components/SEO.astro';
 
-const { slug } = Astro.params;
-const posts = [
-  { slug: 'post-1', title: 'First Post', content: '...' },
-  { slug: 'post-2', title: 'Second Post', content: '...' },
-];
+export function getStaticPaths() {
+  const posts = [
+    { slug: 'post-1', title: 'First Post', content: '...', excerpt: 'Brief description' },
+    { slug: 'post-2', title: 'Second Post', content: '...', excerpt: 'Another post' },
+  ];
 
-const currentPost = posts.find(p => p.slug === slug);
-const relatedPosts = posts.filter(p => p.slug !== slug);
+  return posts.map(post => {
+    const relatedPosts = posts.filter(p => p.slug !== post.slug);
+    
+    return {
+      params: { slug: post.slug },
+      props: { post, relatedPosts }
+    };
+  });
+}
+
+const { post, relatedPosts } = Astro.props;
 ---
 
 <html lang="en">
-  <SEO 
-    title = {currentPost.title}
-    description="Blog post description"
-    canonical={`gbengbartown.com/blog/${slug}`}
-  />
+  <head>
+    <SEO 
+      title={post.title}
+      description={post.excerpt}
+      canonical={`https://gbengbartown.com/blog/${post.slug}`}
+    />
+  </head>
   <body>
     <article>
-      <h1>{currentPost?.title}</h1>
-      <div set:html={currentPost?.content} />
+      <h1>{post.title}</h1>
+      <div set:html={post.content} />
       
-      <!-- Internal backlinks to related content -->
       <section class="related-posts">
         <h2>Related Articles</h2>
         <ul>
-          {relatedPosts.map(post => (
+          {relatedPosts.map(p => (
             <li>
-              <a href={`/blog/${post.slug}`}>{post.title}</a>
+              <a href={`/blog/${p.slug}`}>{p.title}</a>
             </li>
           ))}
         </ul>
