@@ -1,0 +1,12 @@
+---
+// src/components/InternalLink.astro
+interface Props {
+  href: string;
+  text: string;
+  class?: string;
+}
+
+const { href, text, class: className } = Astro.props;
+---
+
+<a href={href} class={className}>{text}</a>
