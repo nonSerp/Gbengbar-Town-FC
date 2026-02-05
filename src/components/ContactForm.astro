@@ -1,0 +1,59 @@
+---
+// src/components/ContactForm.astro
+---
+
+<div class="contact-form-container">
+  <iframe
+    id="contact-form-dlmdae"
+    src="https://opnform.com/forms/contact-form-dlmdae"
+    title="Contact Form"
+  ></iframe>
+</div>
+
+<script is:inline src="https://opnform.com/widgets/iframe.min.js"></script>
+<script is:inline>
+  (function() {
+    function initForm() {
+      if (typeof initEmbed !== 'undefined') {
+        initEmbed('contact-form-dlmdae', { autoResize: true });
+      } else {
+        console.error('initEmbed not available');
+      }
+    }
+    
+    // Try multiple loading strategies
+    if (document.readyState === 'complete') {
+      initForm();
+    } else {
+      window.addEventListener('load', initForm);
+    }
+  })();
+</script>
+
+<style>
+  .contact-form-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  #contact-form-dlmdae {
+    width: 100%;
+    min-height: 600px;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    #contact-form-dlmdae {
+      min-height: 500px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #contact-form-dlmdae {
+      min-height: 700px;
+    }
+  }
+</style>
