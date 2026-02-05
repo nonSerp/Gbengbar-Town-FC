@@ -8,6 +8,6 @@ export default defineConfig({
   integrations: [
     sitemap()
   ],
-  output: 'static',
+  output: 'hybrid',
   adapter: vercel(),
 });
