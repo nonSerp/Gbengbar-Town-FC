@@ -1,0 +1,689 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Blog posts data (in a real app, this would come from a CMS or markdown files)
+const blogPosts = [
+  {
+    id: 1,
+    title: "Season Opener: A Statement Victory",
+    excerpt: "Gbengbar Town FC kicked off the new season with an impressive 3-1 victory against local rivals. The team showed great composure and tactical discipline throughout the match.",
+    author: "Michael Stevens",
+    date: "February 8, 2026",
+    category: "Match Report",
+    image: "/logo.png",
+    featured: true,
+    readTime: "5 min read"
+  },
+  {
+    id: 2,
+    title: "Youth Academy: Building Tomorrow's Stars",
+    excerpt: "Our newly launched youth academy has welcomed its first batch of 30 young talents. Head coach speaks about the vision and training methodology.",
+    author: "Sarah Johnson",
+    date: "February 5, 2026",
+    category: "Academy",
+    image: "/logo.png",
+    featured: false,
+    readTime: "4 min read"
+  },
+  {
+    id: 3,
+    title: "Community Clinic: Giving Back to Gbengbar",
+    excerpt: "Over 150 children from the community participated in our weekend football clinic. Players and coaches share their experiences from this heartwarming event.",
+    author: "David Mensah",
+    date: "February 1, 2026",
+    category: "Community",
+    image: "/logo.png",
+    featured: false,
+    readTime: "3 min read"
+  },
+  {
+    id: 4,
+    title: "Tactical Analysis: The 4-3-3 Formation",
+    excerpt: "Breaking down how our tactical approach has evolved this season. Coach explains the benefits of our new formation and player roles.",
+    author: "Michael Stevens",
+    date: "January 28, 2026",
+    category: "Tactics",
+    image: "/logo.png",
+    featured: false,
+    readTime: "6 min read"
+  },
+  {
+    id: 5,
+    title: "Player Profile: Captain Samuel Konneh",
+    excerpt: "An exclusive interview with our captain about leadership, ambitions, and what it means to represent Gbengbar Town FC.",
+    author: "Sarah Johnson",
+    date: "January 25, 2026",
+    category: "Player Profile",
+    image: "/logo.png",
+    featured: true,
+    readTime: "7 min read"
+  },
+  {
+    id: 6,
+    title: "Training Ground Upgrade Complete",
+    excerpt: "New facilities include improved changing rooms, medical area, and gym equipment. Take a tour of our upgraded training center.",
+    author: "David Mensah",
+    date: "January 20, 2026",
+    category: "Club News",
+    image: "/logo.png",
+    featured: false,
+    readTime: "4 min read"
+  },
+  {
+    id: 7,
+    title: "Derby Day Preview: What to Expect",
+    excerpt: "The biggest match of the season approaches. We preview the upcoming local derby and what's at stake for both teams.",
+    author: "Michael Stevens",
+    date: "January 18, 2026",
+    category: "Match Preview",
+    image: "/logo.png",
+    featured: false,
+    readTime: "5 min read"
+  },
+  {
+    id: 8,
+    title: "Nutrition & Recovery: Inside Our Performance Program",
+    excerpt: "Sports nutritionist reveals the dietary plans and recovery protocols that keep our players at peak performance.",
+    author: "Dr. Grace Williams",
+    date: "January 15, 2026",
+    category: "Performance",
+    image: "/logo.png",
+    featured: false,
+    readTime: "6 min read"
+  },
+  {
+    id: 9,
+    title: "Fan of the Month: Meet Joseph Kamara",
+    excerpt: "Celebrating our most dedicated supporter who hasn't missed a match in two years. His story will inspire you.",
+    author: "Sarah Johnson",
+    date: "January 10, 2026",
+    category: "Fans",
+    image: "/logo.png",
+    featured: false,
+    readTime: "4 min read"
+  }
+];
+
+const categories = ["All", "Match Report", "Academy", "Community", "Tactics", "Player Profile", "Club News", "Match Preview", "Performance", "Fans"];
+---
+
+<Layout title="Blog - Gbengbar Town FC" description="Latest news, match reports, and stories from Gbengbar Town FC">
+  <Header />
+  
+  <main>
+    <!-- Blog Hero -->
+    <section class="blog-hero">
+      <div class="container">
+        <h1>Club Blog</h1>
+        <p class="hero-subtitle">Latest News & Stories from Gbengbar Town FC</p>
+      </div>
+    </section>
+
+    <!-- Category Filter -->
+    <section class="category-filter">
+      <div class="container">
+        <div class="filter-scroll">
+          {categories.map(category => (
+            <button class="category-btn" data-category={category}>
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Posts -->
+    <section class="featured-section">
+      <div class="container">
+        <h2 class="section-title">Featured Stories</h2>
+        <div class="featured-grid">
+          {blogPosts.filter(post => post.featured).map(post => (
+            <article class="featured-card">
+              <div class="featured-image">
+                <img src={post.image} alt={post.title} />
+                <span class="category-badge">{post.category}</span>
+              </div>
+              <div class="featured-content">
+                <div class="post-meta">
+                  <span class="post-date">{post.date}</span>
+                  <span class="post-read-time">{post.readTime}</span>
+                </div>
+                <h3>{post.title}</h3>
+                <p>{post.excerpt}</p>
+                <div class="post-footer">
+                  <span class="post-author">By {post.author}</span>
+                  <a href={`/blog/${post.id}`} class="read-more">Read More →</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- All Posts -->
+    <section class="all-posts">
+      <div class="container">
+        <h2 class="section-title">Latest Articles</h2>
+        <div class="posts-grid">
+          {blogPosts.map(post => (
+            <article class="post-card">
+              <div class="post-image">
+                <img src={post.image} alt={post.title} />
+                <span class="category-badge">{post.category}</span>
+              </div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span class="post-date">{post.date}</span>
+                  <span class="post-read-time">{post.readTime}</span>
+                </div>
+                <h3>{post.title}</h3>
+                <p>{post.excerpt}</p>
+                <div class="post-footer">
+                  <span class="post-author">By {post.author}</span>
+                  <a href={`/blog/${post.id}`} class="read-more">Read More →</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="newsletter">
+      <div class="container">
+        <div class="newsletter-card">
+          <h2>Never Miss an Update</h2>
+          <p>Subscribe to our newsletter for the latest news, match reports, and exclusive content.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required />
+            <button type="submit" class="btn-subscribe">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  /* Blog Hero */
+  .blog-hero {
+    background: linear-gradient(135deg, #0a1f14 0%, #1a4d2e 100%);
+    padding: 6rem 0 4rem;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 50px,
+        rgba(244, 181, 63, 0.03) 50px,
+        rgba(244, 181, 63, 0.03) 51px
+      );
+  }
+
+  .blog-hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #f4b53f;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Category Filter */
+  .category-filter {
+    background: white;
+    padding: 2rem 0;
+    border-bottom: 2px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .filter-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: #f4b53f #f0f0f0;
+  }
+
+  .filter-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .filter-scroll::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+  }
+
+  .filter-scroll::-webkit-scrollbar-thumb {
+    background: #f4b53f;
+    border-radius: 3px;
+  }
+
+  .category-btn {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid #1a4d2e;
+    color: #1a4d2e;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .category-btn:hover,
+  .category-btn.active {
+    background: #1a4d2e;
+    color: white;
+  }
+
+  /* Section Titles */
+  .section-title {
+    font-size: 2.5rem;
+    color: #1a4d2e;
+    margin-bottom: 2rem;
+    font-weight: 800;
+  }
+
+  /* Featured Section */
+  .featured-section {
+    padding: 4rem 0;
+    background: #f8f8f8;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+  }
+
+  .featured-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .featured-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .featured-image {
+    position: relative;
+    height: 350px;
+    background: linear-gradient(135deg, #1a4d2e 0%, #0a1f14 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .featured-image img {
+    max-width: 200px;
+    height: auto;
+    opacity: 0.9;
+    transition: transform 0.3s ease;
+  }
+
+  .featured-card:hover .featured-image img {
+    transform: scale(1.1);
+  }
+
+  .category-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #f4b53f;
+    color: #0a1f14;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .featured-content {
+    padding: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .post-date {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .post-date::before {
+    content: '📅';
+  }
+
+  .post-read-time {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .post-read-time::before {
+    content: '⏱️';
+  }
+
+  .featured-content h3 {
+    font-size: 1.8rem;
+    color: #1a4d2e;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .featured-content p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .post-author {
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .read-more {
+    color: #f4b53f;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .read-more:hover {
+    color: #1a4d2e;
+  }
+
+  /* All Posts Section */
+  .all-posts {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-image {
+    position: relative;
+    height: 250px;
+    background: linear-gradient(135deg, #1a4d2e 0%, #0a1f14 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .post-image img {
+    max-width: 150px;
+    height: auto;
+    opacity: 0.9;
+  }
+
+  .post-content {
+    padding: 1.5rem;
+  }
+
+  .post-content h3 {
+    font-size: 1.3rem;
+    color: #1a4d2e;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .post-content p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  /* Newsletter Section */
+  .newsletter {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #0a1f14 0%, #1a4d2e 100%);
+  }
+
+  .newsletter-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #f4b53f;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .newsletter-card h2 {
+    font-size: 2.5rem;
+    color: #f4b53f;
+    margin-bottom: 1rem;
+  }
+
+  .newsletter-card p {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-form input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .newsletter-form input:focus {
+    outline: none;
+    border-color: #f4b53f;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-subscribe {
+    padding: 1rem 2.5rem;
+    background: #f4b53f;
+    color: #0a1f14;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-subscribe:hover {
+    background: #ffcc5c;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(244, 181, 63, 0.4);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .blog-hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .newsletter-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .newsletter-card h2 {
+      font-size: 1.8rem;
+    }
+
+    .newsletter-form {
+      flex-direction: column;
+    }
+
+    .category-filter {
+      position: relative;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-hero h1 {
+      font-size: 2rem;
+    }
+
+    .featured-content h3 {
+      font-size: 1.4rem;
+    }
+
+    .post-content h3 {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Category filter functionality
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const postCards = document.querySelectorAll('.post-card');
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        const category = button.dataset.category;
+        
+        // Filter posts
+        postCards.forEach(card => {
+          if (category === 'All') {
+            card.style.display = 'block';
+          } else {
+            const cardCategory = card.querySelector('.category-badge').textContent.trim();
+            card.style.display = cardCategory === category ? 'block' : 'none';
+          }
+        });
+      });
+    });
+
+    // Set first button as active by default
+    if (categoryButtons.length > 0) {
+      categoryButtons[0].classList.add('active');
+    }
+
+    // Newsletter form submission
+    const newsletterForm = document.querySelector('.newsletter-form');
+    if (newsletterForm) {
+      newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = newsletterForm.querySelector('input').value;
+        alert(`Thank you for subscribing! We'll send updates to ${email}`);
+        newsletterForm.reset();
+      });
+    }
+  });
+</script>
