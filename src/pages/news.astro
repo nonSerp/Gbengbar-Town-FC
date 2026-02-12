@@ -1,5 +1,6 @@
 ---
-// news.astro - News and Articles Page
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <!DOCTYPE html>
@@ -519,6 +520,7 @@
     </style>
 </head>
 <body>
+    <Header/>
     <!-- Hero Section -->
     <section class="hero">
         <h1>News & Articles</h1>
@@ -795,14 +797,7 @@ Liberian youth talent, the world is watching. 🚀🇱🇷
         </div>
 
         <!-- Newsletter Section -->
-        <section class="newsletter">
-            <h2>Stay in the Loop</h2>
-            <p>Subscribe to our newsletter and never miss an update</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email address" required>
-                <button type="submit">Subscribe</button>
-            </form>
-        </section>
+        
     </div>
 
     //<script>
@@ -864,5 +859,6 @@ Liberian youth talent, the world is watching. 🚀🇱🇷
             });
         });
     </script>
+    <Footer/>
 </body>
 </html>
