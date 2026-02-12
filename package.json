@@ -12,7 +12,9 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/vercel": "^9.0.4",
-    "astro": "^5.1.1"
+    "@iconify-json/mdi": "^1.2.3",
+    "astro": "^5.1.1",
+    "astro-icon": "^1.1.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

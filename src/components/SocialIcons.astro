@@ -1,0 +1,26 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const socialLinks = [
+  { name: 'mdi:facebook', href: 'https://facebook.com', title: 'Follow on Facebook' },
+  { name: 'mdi:twitter', href: 'https://twitter.com', title: 'Follow on Twitter' },
+    { name: 'mdi:youtube', href: 'https://youtube.com', title: 'Subscribe on YouTube' },
+  // Add more social links as needed
+];
+---
+
+<div class="social-icons">
+  {socialLinks.map((link) => (
+    <a href={link.href} title={link.title} target="_blank" rel="noopener noreferrer">
+      <Icon name={link.name} width={24} height={24} />
+    </a>
+  ))}
+</div>
+
+<style>
+  .social-icons a {
+    /* Add your styling here (e.g., margin, color) */
+    margin-right: 10px;
+    color: currentColor; /* Allows color to be controlled by parent CSS */
+  }
+</style>
